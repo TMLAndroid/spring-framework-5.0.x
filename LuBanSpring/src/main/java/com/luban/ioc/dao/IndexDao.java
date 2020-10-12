@@ -1,4 +1,4 @@
-package com.luban.dao;
+package com.luban.ioc.dao;
 
 import org.springframework.stereotype.Component;
 

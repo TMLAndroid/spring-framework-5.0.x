@@ -1,9 +1,11 @@
-package com.luban.config;
+package com.luban.aop.config;
 
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
 @Configuration
-@ComponentScan("com.luban.*")
+@EnableAspectJAutoProxy
+@ComponentScan("com.luban.aop")
 public class AppConfig {
 }

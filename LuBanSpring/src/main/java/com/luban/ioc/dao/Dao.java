@@ -1,4 +1,4 @@
-package com.luban.dao;
+package com.luban.ioc.dao;
 
 public class Dao {
 

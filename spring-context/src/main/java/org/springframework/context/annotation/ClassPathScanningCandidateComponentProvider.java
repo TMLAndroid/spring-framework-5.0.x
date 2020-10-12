@@ -311,6 +311,7 @@ public class ClassPathScanningCandidateComponentProvider implements EnvironmentC
 		if (this.componentsIndex != null && indexSupportsIncludeFilters()) {
 			return addCandidateComponentsFromIndex(this.componentsIndex, basePackage);
 		}
+		//asm 是实现
 		else {
 			return scanCandidateComponents(basePackage);
 		}
@@ -412,6 +413,7 @@ public class ClassPathScanningCandidateComponentProvider implements EnvironmentC
 		return candidates;
 	}
 
+	//asm读取class文件
 	private Set<BeanDefinition> scanCandidateComponents(String basePackage) {
 		Set<BeanDefinition> candidates = new LinkedHashSet<>();
 		try {

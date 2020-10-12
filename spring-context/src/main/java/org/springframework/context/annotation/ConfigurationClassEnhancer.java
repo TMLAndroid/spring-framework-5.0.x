@@ -75,7 +75,7 @@ class ConfigurationClassEnhancer {
 
 	// The callbacks to use. Note that these callbacks must be stateless.
 	private static final Callback[] CALLBACKS = new Callback[] {
-			new BeanMethodInterceptor(),
+			new BeanMethodInterceptor(),//这个比较重要
 			new BeanFactoryAwareMethodInterceptor(),
 			NoOp.INSTANCE
 	};
@@ -96,6 +96,7 @@ class ConfigurationClassEnhancer {
 	 * @return the enhanced subclass
 	 */
 	public Class<?> enhance(Class<?> configClass, @Nullable ClassLoader classLoader) {
+		//判断是否被代理
 		if (EnhancedConfiguration.class.isAssignableFrom(configClass)) {
 			if (logger.isDebugEnabled()) {
 				logger.debug(String.format("Ignoring request to enhance %s as it has " +
@@ -107,6 +108,7 @@ class ConfigurationClassEnhancer {
 			}
 			return configClass;
 		}
+		//调用cglib库创建newEnhancer
 		Class<?> enhancedClass = createClass(newEnhancer(configClass, classLoader));
 		if (logger.isDebugEnabled()) {
 			logger.debug(String.format("Successfully enhanced %s; enhanced class name is: %s",
@@ -121,10 +123,12 @@ class ConfigurationClassEnhancer {
 	private Enhancer newEnhancer(Class<?> configSuperClass, @Nullable ClassLoader classLoader) {
 		Enhancer enhancer = new Enhancer();
 		enhancer.setSuperclass(configSuperClass);
+		//实现 BeanFactoryAware类的 setBeanFactory 可以获取Bean工厂
 		enhancer.setInterfaces(new Class<?>[] {EnhancedConfiguration.class});
 		enhancer.setUseFactory(false);
 		enhancer.setNamingPolicy(SpringNamingPolicy.INSTANCE);
 		enhancer.setStrategy(new BeanFactoryAwareGeneratorStrategy(classLoader));
+		//增加过滤器 实现代理
 		enhancer.setCallbackFilter(CALLBACK_FILTER);
 		enhancer.setCallbackTypes(CALLBACK_FILTER.getCallbackTypes());
 		return enhancer;
@@ -324,6 +328,7 @@ class ConfigurationClassEnhancer {
 			Scope scope = AnnotatedElementUtils.findMergedAnnotation(beanMethod, Scope.class);
 			if (scope != null && scope.proxyMode() != ScopedProxyMode.NO) {
 				String scopedBeanName = ScopedProxyCreator.getTargetBeanName(beanName);
+
 				if (beanFactory.isCurrentlyInCreation(scopedBeanName)) {
 					beanName = scopedBeanName;
 				}
@@ -348,6 +353,8 @@ class ConfigurationClassEnhancer {
 				}
 			}
 
+			//判断执行的方法h和调用的方法是不是同一个方法
+			//判断到底是new 还是get
 			if (isCurrentlyInvokedFactoryMethod(beanMethod)) {
 				// The factory is calling the bean method in order to instantiate and register the bean
 				// (i.e. via a getBean() call) -> invoke the super implementation of the method to actually

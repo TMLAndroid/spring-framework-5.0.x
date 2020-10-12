@@ -106,6 +106,7 @@ public class GenericApplicationContext extends AbstractApplicationContext implem
 	 * @see #registerBeanDefinition
 	 * @see #refresh
 	 * 初始化Bean工厂
+	 * DefaultListableBeanFactory 实现自 DBR BeanDefintionRegister
 	 */
 	public GenericApplicationContext() {
 		this.beanFactory = new DefaultListableBeanFactory();

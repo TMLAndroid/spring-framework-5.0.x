@@ -109,9 +109,11 @@ abstract class ConfigurationClassUtils {
 			}
 		}
 
+		//是否加了@Configuration 加了添加 full属性
 		if (isFullConfigurationCandidate(metadata)) {
 			beanDef.setAttribute(CONFIGURATION_CLASS_ATTRIBUTE, CONFIGURATION_CLASS_FULL);
 		}
+		//如果没加@Configuration 而加了其它几个 则 lite
 		else if (isLiteConfigurationCandidate(metadata)) {
 			beanDef.setAttribute(CONFIGURATION_CLASS_ATTRIBUTE, CONFIGURATION_CLASS_LITE);
 		}
