@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
 @Configuration
-@EnableAspectJAutoProxy
+@EnableAspectJAutoProxy//动态添加一个后置处理器 AnnotationAwareAspectJAutoProxyCreator
 @ComponentScan("com.luban.aop")
 public class AppConfig {
 }

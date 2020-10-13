@@ -535,9 +535,11 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 				//在这里相当于执行了ConfigurationClassPostProcessor
 				invokeBeanFactoryPostProcessors(beanFactory);
 
+				//添加Bean的后置处理器 比如 AOP支持 比如@Required注解
 				// Register bean processors that intercept bean creation.
 				registerBeanPostProcessors(beanFactory);
 
+				//国际化
 				// Initialize message source for this context.
 				initMessageSource();
 
@@ -550,6 +552,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 				// Check for listener beans and register them.
 				registerListeners();
 
+				//在这之前 类没有进行实例化
 				// Instantiate all remaining (non-lazy-init) singletons.
 				finishBeanFactoryInitialization(beanFactory);
 
