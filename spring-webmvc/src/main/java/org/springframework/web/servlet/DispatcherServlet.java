@@ -151,7 +151,8 @@ import org.springframework.web.util.WebUtils;
  * @author Chris Beams
  * @author Rossen Stoyanchev
  * @see org.springframework.web.HttpRequestHandler
- * @see org.springframework.web.servlet.mvc.Controller
+ * @see org.springfr
+ * amework.web.servlet.mvc.Controller
  * @see org.springframework.web.context.ContextLoaderListener
  */
 @SuppressWarnings("serial")
@@ -259,7 +260,7 @@ public class DispatcherServlet extends FrameworkServlet {
 	/** Log category to use when no mapped handler is found for a request. */
 	public static final String PAGE_NOT_FOUND_LOG_CATEGORY = "org.springframework.web.servlet.PageNotFound";
 
-	/**
+	/** 加载静态资源
 	 * Name of the class path resource (relative to the DispatcherServlet class)
 	 * that defines DispatcherServlet's default strategy names.
 	 */

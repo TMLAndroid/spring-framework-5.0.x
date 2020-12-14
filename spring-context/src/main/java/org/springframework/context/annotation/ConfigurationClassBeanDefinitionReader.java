@@ -139,6 +139,7 @@ class ConfigurationClassBeanDefinitionReader {
 		if (configClass.isImported()) {
 			registerBeanDefinitionForImportedConfigurationClass(configClass);
 		}
+		//@Bean
 		for (BeanMethod beanMethod : configClass.getBeanMethods()) {
 			//方法
 			loadBeanDefinitionsForBeanMethod(beanMethod);
@@ -219,7 +220,7 @@ class ConfigurationClassBeanDefinitionReader {
 			beanDef.setBeanClassName(configClass.getMetadata().getClassName());
 			beanDef.setFactoryMethodName(methodName);
 		}
-		else {
+		else {//非静态
 			// instance @Bean method
 			beanDef.setFactoryBeanName(configClass.getBeanName());
 			beanDef.setUniqueFactoryMethodName(methodName);

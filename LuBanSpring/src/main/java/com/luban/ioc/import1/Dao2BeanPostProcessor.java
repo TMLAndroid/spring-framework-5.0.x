@@ -11,7 +11,7 @@ public class Dao2BeanPostProcessor implements BeanPostProcessor , InvocationHand
 	@Override
 	public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
 		if (beanName.equals("Dao2Impl")){
-			bean = Proxy.newProxyInstance(this.getClass().getClassLoader(),new Class[]{Dao2.class},this);
+			bean = Proxy.newProxyInstance(this.getClass().getClassLoader(),new Class<?>[]{Dao2.class},this);
 		}
 		return bean;
 	}
