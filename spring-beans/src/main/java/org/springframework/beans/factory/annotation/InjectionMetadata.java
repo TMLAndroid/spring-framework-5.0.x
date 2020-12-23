@@ -65,9 +65,13 @@ public class InjectionMetadata {
 
 	public void checkConfigMembers(RootBeanDefinition beanDefinition) {
 		Set<InjectedElement> checkedElements = new LinkedHashSet<>(this.injectedElements.size());
+		//获取上一步注入元素
 		for (InjectedElement element : this.injectedElements) {
+			//获取成员
 			Member member = element.getMember();
+			//成员还没有和当前类进行联系
 			if (!beanDefinition.isExternallyManagedConfigMember(member)) {
+				//把解析出来的成员加入到BD
 				beanDefinition.registerExternallyManagedConfigMember(member);
 				checkedElements.add(element);
 				if (logger.isDebugEnabled()) {
@@ -75,10 +79,12 @@ public class InjectionMetadata {
 				}
 			}
 		}
+		//解析出来的依赖成员加入到当前类的BD
 		this.checkedElements = checkedElements;
 	}
 
 	public void inject(Object target, @Nullable String beanName, @Nullable PropertyValues pvs) throws Throwable {
+		//从缓存获取变量元素
 		Collection<InjectedElement> checkedElements = this.checkedElements;
 		Collection<InjectedElement> elementsToIterate =
 				(checkedElements != null ? checkedElements : this.injectedElements);
@@ -87,6 +93,7 @@ public class InjectionMetadata {
 				if (logger.isDebugEnabled()) {
 					logger.debug("Processing injected element of bean '" + beanName + "': " + element);
 				}
+				//调用注入
 				element.inject(target, beanName, pvs);
 			}
 		}
@@ -175,6 +182,7 @@ public class InjectionMetadata {
 				throws Throwable {
 
 			if (this.isField) {
+				//获取成员字段
 				Field field = (Field) this.member;
 				ReflectionUtils.makeAccessible(field);
 				field.set(target, getResourceToInject(target, requestingBeanName));

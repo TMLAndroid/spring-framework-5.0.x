@@ -162,10 +162,14 @@ public class ClassPathBeanDefinitionScanner extends ClassPathScanningCandidateCo
 		Assert.notNull(registry, "BeanDefinitionRegistry must not be null");
 		this.registry = registry;
 
+		//注册包扫描默认的规则
 		if (useDefaultFilters) {
+			//【跳转】
 			registerDefaultFilters();
 		}
+		//设置环境
 		setEnvironment(environment);
+		//设置资源加载器
 		setResourceLoader(resourceLoader);
 	}
 
@@ -270,13 +274,16 @@ public class ClassPathBeanDefinitionScanner extends ClassPathScanningCandidateCo
 	 */
 	protected Set<BeanDefinitionHolder> doScan(String... basePackages) {
 		Assert.notEmpty(basePackages, "At least one base package must be specified");
+		//创建一个BD set集合
 		Set<BeanDefinitionHolder> beanDefinitions = new LinkedHashSet<>();
+		//循环扫描路径
 		for (String basePackage : basePackages) {
-			//符合条件的class并把其转换成BeanDefinition
+			//符合条件的class并把其转换成BeanDefinition【跳转】
 			Set<BeanDefinition> candidates = findCandidateComponents(basePackage);
 			for (BeanDefinition candidate : candidates) {
 				ScopeMetadata scopeMetadata = this.scopeMetadataResolver.resolveScopeMetadata(candidate);
 				candidate.setScope(scopeMetadata.getScopeName());
+				//生成bean名称
 				String beanName = this.beanNameGenerator.generateBeanName(candidate, this.registry);
 				// candidate  ScannerGenericDefinition 是 AbstractBeanDefinition子类
 				if (candidate instanceof AbstractBeanDefinition) {
@@ -286,10 +293,13 @@ public class ClassPathBeanDefinitionScanner extends ClassPathScanningCandidateCo
 				if (candidate instanceof AnnotatedBeanDefinition) {//解析 Lazy Primary DependsOn Role Description等注解
 					AnnotationConfigUtils.processCommonDefinitionAnnotations((AnnotatedBeanDefinition) candidate);
 				}
+				//检查当前和存在是否冲突
 				if (checkCandidate(beanName, candidate)) {
+					//封装成BDH
 					BeanDefinitionHolder definitionHolder = new BeanDefinitionHolder(candidate, beanName);
 					definitionHolder =
 							AnnotationConfigUtils.applyScopedProxyMode(scopeMetadata, definitionHolder, this.registry);
+					//加入集合
 					beanDefinitions.add(definitionHolder);
 					//加入到 map当中
 					registerBeanDefinition(definitionHolder, this.registry);

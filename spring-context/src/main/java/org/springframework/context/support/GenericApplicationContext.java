@@ -106,9 +106,10 @@ public class GenericApplicationContext extends AbstractApplicationContext implem
 	 * @see #registerBeanDefinition
 	 * @see #refresh
 	 * 初始化Bean工厂
-	 * DefaultListableBeanFactory 实现自 DBR BeanDefintionRegister
+	 * DefaultListableBeanFactory 实现自 BDR BeanDefintionRegister
 	 */
 	public GenericApplicationContext() {
+		//创建IOC容器
 		this.beanFactory = new DefaultListableBeanFactory();
 	}
 
@@ -262,10 +263,12 @@ public class GenericApplicationContext extends AbstractApplicationContext implem
 	 */
 	@Override
 	protected final void refreshBeanFactory() throws IllegalStateException {
+		//cas 控制容器只能刷新一次
 		if (!this.refreshed.compareAndSet(false, true)) {
 			throw new IllegalStateException(
 					"GenericApplicationContext does not support multiple refresh attempts: just call 'refresh' once");
 		}
+		//为容器设置ID
 		this.beanFactory.setSerializationId(getId());
 	}
 

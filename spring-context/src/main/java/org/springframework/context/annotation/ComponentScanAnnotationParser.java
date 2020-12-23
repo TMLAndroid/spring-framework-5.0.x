@@ -75,6 +75,7 @@ class ComponentScanAnnotationParser {
 
 	public Set<BeanDefinitionHolder> parse(AnnotationAttributes componentScan, final String declaringClass) {
 		//这个scanner是内部创建的 不是AnnotationApplicationContext 构造函数的scanner 构造函数的scanner是供程序员调用
+		// 跳转
 		ClassPathBeanDefinitionScanner scanner = new ClassPathBeanDefinitionScanner(this.registry,
 				componentScan.getBoolean("useDefaultFilters"), this.environment, this.resourceLoader);
 
@@ -132,6 +133,7 @@ class ComponentScanAnnotationParser {
 			}
 		});
 		//执行doScan
+		//真正扫描器扫描的指定路径
 		return scanner.doScan(StringUtils.toStringArray(basePackages));
 	}
 

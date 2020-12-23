@@ -279,6 +279,7 @@ public class AnnotationConfigWebApplicationContext extends AbstractRefreshableWe
 	 * @see #getScopeMetadataResolver()
 	 */
 	protected ClassPathBeanDefinitionScanner getClassPathBeanDefinitionScanner(DefaultListableBeanFactory beanFactory) {
+		//类路径下BD扫描器
 		return new ClassPathBeanDefinitionScanner(beanFactory, true, getEnvironment());
 	}
 

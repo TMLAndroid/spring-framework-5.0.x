@@ -85,8 +85,11 @@ public class BeanFactoryAspectJAdvisorsBuilder {
 
 		if (aspectNames == null) {
 			synchronized (this) {
+				//尝试在缓存中获取一次
 				aspectNames = this.aspectBeanNames;
+				//还是没有获取到
 				if (aspectNames == null) {
+					//从容器中获取所有的bean的name
 					List<Advisor> advisors = new ArrayList<>();
 					aspectNames = new ArrayList<>();
 					String[] beanNames = BeanFactoryUtils.beanNamesForTypeIncludingAncestors(
@@ -97,16 +100,20 @@ public class BeanFactoryAspectJAdvisorsBuilder {
 						}
 						// We must be careful not to instantiate beans eagerly as in this case they
 						// would be cached by the Spring container but would not have been weaved.
+						//根据beanName获取bean类型
 						Class<?> beanType = this.beanFactory.getType(beanName);
 						if (beanType == null) {
 							continue;
 						}
+						//检查是否包含Aspect
 						if (this.advisorFactory.isAspect(beanType)) {
 							aspectNames.add(beanName);
+							//创建 AspectMetadata
 							AspectMetadata amd = new AspectMetadata(beanType, beanName);
 							if (amd.getAjType().getPerClause().getKind() == PerClauseKind.SINGLETON) {
 								MetadataAwareAspectInstanceFactory factory =
 										new BeanFactoryAspectInstanceFactory(this.beanFactory, beanName);
+								//从AspectJ中获取通知器 【调用】
 								List<Advisor> classAdvisors = this.advisorFactory.getAdvisors(factory);
 								if (this.beanFactory.isSingleton(beanName)) {
 									this.advisorsCache.put(beanName, classAdvisors);
@@ -135,9 +142,11 @@ public class BeanFactoryAspectJAdvisorsBuilder {
 			}
 		}
 
+		//返回空
 		if (aspectNames.isEmpty()) {
 			return Collections.emptyList();
 		}
+		//缓存有增强器，我们从缓存中获取返回
 		List<Advisor> advisors = new ArrayList<>();
 		for (String aspectName : aspectNames) {
 			List<Advisor> cachedAdvisors = this.advisorsCache.get(aspectName);
@@ -146,6 +155,7 @@ public class BeanFactoryAspectJAdvisorsBuilder {
 			}
 			else {
 				MetadataAwareAspectInstanceFactory factory = this.aspectFactoryCache.get(aspectName);
+
 				advisors.addAll(this.advisorFactory.getAdvisors(factory));
 			}
 		}

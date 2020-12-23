@@ -232,7 +232,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 					"postProcessBeanFactory already called on this post-processor against " + registry);
 		}
 		this.registriesPostProcessed.add(registryId);
-
+		//3.2.3.2>i5
 		processConfigBeanDefinitions(registry);
 	}
 
@@ -264,8 +264,11 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 	 * Build and validate a configuration model based on the registry of
 	 * {@link Configuration} classes.
 	 */
+	//3.2.3.2>i5
+	//解析&校验@Configuration
 	public void processConfigBeanDefinitions(BeanDefinitionRegistry registry) {
 		List<BeanDefinitionHolder> configCandidates = new ArrayList<>();
+		//去ioc容器获取bean定义的名称
 		String[] candidateNames = registry.getBeanDefinitionNames();
 
 		for (String beanName : candidateNames) {//是否已经被处理了
@@ -299,6 +302,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 		});
 
 		// Detect any custom bean name generation strategy supplied through the enclosing application context
+		//自定义bean 名称生成策略
 		SingletonBeanRegistry sbr = null;
 		if (registry instanceof SingletonBeanRegistry) {
 			sbr = (SingletonBeanRegistry) registry;
@@ -316,17 +320,28 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 		}
 
 		// Parse each @Configuration class  生成一个解析器
+		//metadataReaderFactory 元数据读取工厂
+		//problemReporter 问题报道器
+		//environment 设置环境
+		//resourceLoader 资源加载器
+		//componentScanBeanNameGenerator 组件扫描器
 		ConfigurationClassParser parser = new ConfigurationClassParser(
 				this.metadataReaderFactory, this.problemReporter, this.environment,
 				this.resourceLoader, this.componentScanBeanNameGenerator, registry);
-
+		//将要被解析的配置类(把自己的config(mainConfig)加入到 候选)
 		Set<BeanDefinitionHolder> candidates = new LinkedHashSet<>(configCandidates);
+		//已经被解析的配置类
 		Set<ConfigurationClass> alreadyParsed = new HashSet<>(configCandidates.size());
 		do {
+			//3.2.3.2>i6
+			//配置解析器 执行解析
 			parser.parse(candidates);
+			//校验
 			parser.validate();
 
+			//获取ConfigClass(把解析过的配置bean定义信息取出来 包含dao service controller)
 			Set<ConfigurationClass> configClasses = new LinkedHashSet<>(parser.getConfigurationClasses());
+			//移除已经解析完的mainClass
 			configClasses.removeAll(alreadyParsed);
 
 			// Read the model and create bean definitions based on its content
@@ -336,9 +351,11 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 						this.importBeanNameGenerator, parser.getImportRegistry());
 			}
 			this.reader.loadBeanDefinitions(configClasses);
+			//已经解析过的组件放入容器
 			alreadyParsed.addAll(configClasses);
-
+			//清除解析过的配置类
 			candidates.clear();
+			//已经注册的BD 大于 系统BD+主配置BD
 			if (registry.getBeanDefinitionCount() > candidateNames.length) {
 				String[] newCandidateNames = registry.getBeanDefinitionNames();
 				Set<String> oldCandidateNames = new HashSet<>(Arrays.asList(candidateNames));
@@ -358,7 +375,7 @@ public class ConfigurationClassPostProcessor implements BeanDefinitionRegistryPo
 				candidateNames = newCandidateNames;
 			}
 		}
-		while (!candidates.isEmpty());
+		while (!candidates.isEmpty());//还存在没有解析过的 再次解析
 
 		// Register the ImportRegistry as a bean in order to support ImportAware @Configuration classes
 		if (sbr != null && !sbr.containsSingleton(IMPORT_REGISTRY_BEAN_NAME)) {

@@ -41,7 +41,7 @@ class AspectJAutoProxyRegistrar implements ImportBeanDefinitionRegistrar {
 	@Override
 	public void registerBeanDefinitions(
 			AnnotationMetadata importingClassMetadata, BeanDefinitionRegistry registry) {
-		//AnnotationAutoProxyCreator 添加一个后置处理器 处理AOP
+		//AnnotationAutoProxyCreator 添加一个后置处理器 处理AOP 实现了SmartInstantiationAwareBeanPostProcessor 和 BeanFactoryAware
 		AopConfigUtils.registerAspectJAnnotationAutoProxyCreatorIfNecessary(registry);
 
 		AnnotationAttributes enableAspectJAutoProxy =

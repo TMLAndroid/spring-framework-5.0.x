@@ -63,12 +63,13 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 	 */
 	public AnnotationConfigApplicationContext() {
 		/**
-		 * 父类构造方法 初始化DBR(DefaultListableBeanFactory)
-		 * AnnotationConfigApplicationContext 也是实现自 DBR
+		 * 父类构造方法 初始化BDR(DefaultListableBeanFactory)
+		 * AnnotationConfigApplicationContext 也是实现自 BDR
 		 * 创建读取注解Bean的读取器
 		 *
 		 */
 		this.reader = new AnnotatedBeanDefinitionReader(this);
+		//创建类路径下的bean定义扫描器
 		this.scanner = new ClassPathBeanDefinitionScanner(this);
 	}
 
@@ -90,6 +91,7 @@ public class AnnotationConfigApplicationContext extends GenericApplicationContex
 	 */
 	public AnnotationConfigApplicationContext(Class<?>... annotatedClasses) {
 		this();
+		//BeanDefinitionReader 注册配置类
 		register(annotatedClasses);
 		refresh();
 	}
