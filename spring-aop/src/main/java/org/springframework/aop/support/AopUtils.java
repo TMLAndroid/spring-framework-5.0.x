@@ -226,7 +226,7 @@ public abstract class AopUtils {
 			return false;
 		}
 
-		//创建一个方法匹配器
+		//创建一个方法匹配器    这里分路 AOp 和事务的处理(TransactionAttributeSourcePointcut) 【调用】
 		MethodMatcher methodMatcher = pc.getMethodMatcher();
 		if (methodMatcher == MethodMatcher.TRUE) {
 			// No need to iterate the methods if we're matching any method anyway...
