@@ -536,7 +536,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 			try {
 				// Allows post-processing of the bean factory in context subclasses.
 				//3.4.1>i4
-				//子类覆盖做额外处理
+				//子类覆盖做额外处理 Spring没有做事情 web 注册了ServletContextAwareProcessor
 				postProcessBeanFactory(beanFactory);
 
 				// Invoke factory processors registered as beans in the context.
@@ -758,7 +758,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	//3.2.3.2>i2
 	protected void invokeBeanFactoryPostProcessors(ConfigurableListableBeanFactory beanFactory) {
 
-		//getBeanFactoryPostProcessors（）获取收到给Spring给的 BeanFactoryPostProcessor 在这里是自己外部传的
+		//getBeanFactoryPostProcessors（）  BeanFactoryPostProcessor 在这里是自己外部传的
 		PostProcessorRegistrationDelegate.invokeBeanFactoryPostProcessors(beanFactory, getBeanFactoryPostProcessors());
 
 		// Detect a LoadTimeWeaver and prepare for weaving, if found in the meantime

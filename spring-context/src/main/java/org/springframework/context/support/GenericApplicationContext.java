@@ -109,7 +109,7 @@ public class GenericApplicationContext extends AbstractApplicationContext implem
 	 * DefaultListableBeanFactory 实现自 BDR BeanDefintionRegister
 	 */
 	public GenericApplicationContext() {
-		//创建IOC容器
+		//创建IOC容器 默认的实现
 		this.beanFactory = new DefaultListableBeanFactory();
 	}
 
